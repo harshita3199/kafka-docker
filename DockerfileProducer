@@ -1,0 +1,11 @@
+FROM ubuntu:18.04
+#ENV DEBIAN_FRONTEND noninteractive
+#ENV LANG=en_US.UTF-8
+RUN apt-get update && apt-get upgrade -y && apt-get install -q -y apt-utils openjdk-8-jdk python3-pip curl
+RUN pip3 install kafka-python
+RUN cd /opt && curl -OL https://dlcdn.apache.org/kafka/3.1.0/kafka_2.13-3.1.0.tgz && tar -zxvf kafka_2.13-3.1.0.tgz && rm kafka_2.13-3.1.0.tgz
+WORKDIR /opt/kafka_2.13-3.1.0/
+COPY start.sh /opt/kafka_2.13-3.1.0
+COPY kafkaProducer.py /opt/kafka_2.13-3.1.0
+CMD ["./start.sh"]
+ENTRYPOINT ["python3", "kafkaProducer.py"]
